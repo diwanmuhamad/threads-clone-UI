@@ -1,37 +1,34 @@
-import { StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, ScrollView, Button } from "react-native";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
+import LottieView from "lottie-react-native";
+import { useRef } from "react";
 
 export default function TabOneScreen() {
+  const animation = useRef(null);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        My apps coming to yours smartphone, cheers!
-      </Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <SafeAreaView style={styles.animationContainer}>
+      <ScrollView>
+        <Text>testingg</Text>
+        <LottieView
+          source={require("../../assets/animations/threads.json")}
+          loop={true}
+          autoPlay
+          ref={animation}
+          style={{ width: 90, height: 90, alignSelf: "center" }}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  animationContainer: {
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+    flex: 1,
   },
 });
