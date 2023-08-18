@@ -11,10 +11,12 @@ import { Text, View } from "../../components/Themed";
 import LottieView from "lottie-react-native";
 import { useRef } from "react";
 import { RefreshControl } from "react-native-gesture-handler";
+import { ThreadsContext } from "../../context/thread-context";
+import React from "react";
 
 export default function TabOneScreen() {
   const animation = useRef<LottieView>(null);
-
+  const threads = React.useContext(ThreadsContext);
   return (
     <SafeAreaView>
       <ScrollView
@@ -39,6 +41,9 @@ export default function TabOneScreen() {
           ref={animation}
           style={{ width: 90, height: 90, alignSelf: "center" }}
         />
+        {threads.map((thread) => (
+          <Text key={thread.author.id}>{thread.author.name}</Text>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
