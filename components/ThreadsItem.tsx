@@ -1,24 +1,88 @@
 import * as React from "react";
 import { Thread } from "../types/threads";
 import { View, Text } from "./Themed";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Feather,
+  FontAwesome,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { timeAgo } from "../utils/time-ago";
+import { StyleSheet, useColorScheme } from "react-native";
+import { Image } from "expo-image";
+
+const blurhash = "LJK^W.4.?b~p.7RkozIUNFt7oeM{";
 
 export default function ThreadsItem(thread: Thread): JSX.Element {
   return (
-    <View>
-      <Text>{thread.author.username}</Text>
-      <View>
+    <View style={styles.container}>
+      <PostLeftSide {...thread} />
+      <View style={{ gap: 6, flexShrink: 1 }}>
         <PostHeading
           name={thread.author.name}
           createdAt={thread.createdAt}
           verified={thread.author.verified}
         />
+        <Text>{thread.content}</Text>
+        {thread.image && (
+          <Image
+            source={thread.image}
+            style={{ width: "100%", minHeight: 300, borderRadius: 10 }}
+            placeholder={blurhash}
+            contentFit="cover"
+            transition={200}
+          />
+        )}
+        <BottomIcons />
         <PostFooter
           replies={thread.repliesCount}
           likes={thread.likesCount}
         ></PostFooter>
       </View>
+    </View>
+  );
+}
+
+function PostLeftSide(thread: Thread) {
+  const currTheme = useColorScheme();
+  const borderColor = currTheme === "dark" ? "#00000020" : "#ffffff20";
+  return (
+    <View style={{ justifyContent: "space-between" }}>
+      <Image
+        source={thread.author.photo}
+        style={styles.image}
+        placeholder={blurhash}
+        contentFit="cover"
+        transition={500}
+      />
+      <View
+        style={{
+          borderWidth: 1,
+          alignSelf: "center",
+          borderColor: borderColor,
+          flexGrow: 1,
+        }}
+      />
+      <View
+        style={{
+          width: 20,
+          alignItems: "center",
+          alignSelf: "center",
+          gap: 3,
+        }}
+      />
+      {[1, 2, 3].map((index) => (
+        <Image
+          key={index}
+          //@ts-ignore
+          source={thread.replies[index - 1]?.author.photo}
+          style={{ width: index * 7, height: index * 7, borderRadius: 15 }}
+          placeholder={blurhash}
+          contentFit="cover"
+          transition={500}
+        />
+      ))}
     </View>
   );
 }
@@ -68,3 +132,38 @@ function PostFooter({
     </Text>
   );
 }
+
+function BottomIcons() {
+  const iconSize = 20;
+  const currentTheme = useColorScheme();
+  const iconColor = currentTheme === "dark" ? "white" : "black";
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <FontAwesome
+        name="heart-o"
+        size={iconSize}
+        color={iconColor}
+      ></FontAwesome>
+      <Ionicons
+        name="chatbubble-outline"
+        size={iconSize}
+        color={iconColor}
+      ></Ionicons>
+      <AntDesign name="retweet" size={iconSize} color={iconColor}></AntDesign>
+      <Feather name="send" size={iconSize} color={iconColor}></Feather>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    gap: 6,
+    paddingBottom: 30,
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+});
