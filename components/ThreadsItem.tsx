@@ -9,7 +9,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { timeAgo } from "../utils/time-ago";
-import { StyleSheet, useColorScheme } from "react-native";
+import { Platform, StyleSheet, useColorScheme } from "react-native";
 import { Image } from "expo-image";
 
 const blurhash = "LJK^W.4.?b~p.7RkozIUNFt7oeM{";
@@ -46,7 +46,7 @@ export default function ThreadsItem(thread: Thread): JSX.Element {
 
 function PostLeftSide(thread: Thread) {
   const currTheme = useColorScheme();
-  const borderColor = currTheme === "dark" ? "#00000020" : "#ffffff20";
+  const borderColor = currTheme === "dark" ? "gray" : "black";
   return (
     <View style={{ justifyContent: "space-between" }}>
       <Image
@@ -72,17 +72,26 @@ function PostLeftSide(thread: Thread) {
           gap: 3,
         }}
       />
-      {[1, 2, 3].map((index) => (
-        <Image
-          key={index}
-          //@ts-ignore
-          source={thread.replies[index - 1]?.author.photo}
-          style={{ width: index * 7, height: index * 7, borderRadius: 15 }}
-          placeholder={blurhash}
-          contentFit="cover"
-          transition={500}
-        />
-      ))}
+      <View
+        style={Platform.OS === "android" && { alignItems: "center", gap: 2 }}
+      >
+        {[1, 2, 3].map((index) => (
+          <Image
+            key={index}
+            //@ts-ignore
+            source={thread.replies[index - 1]?.author.photo}
+            style={{
+              width: index * 7,
+              height: index * 7,
+              borderRadius: 15,
+              // marginLeft: Platform.OS === "android" ? 3 * (5 - index) : 0,
+            }}
+            placeholder={blurhash}
+            contentFit="cover"
+            transition={500}
+          />
+        ))}
+      </View>
     </View>
   );
 }
